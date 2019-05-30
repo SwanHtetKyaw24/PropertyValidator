@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -33,6 +34,7 @@ import com.startinpoint.utils.DesEncrypter;
 public class PropertyFileReader {
 
 	public static void main(String[] args) {
+		// getFileNamesInDirectory();
 		String propertyFileURL = "./application.properties";
 		Properties refProp = new Properties();
 
@@ -47,6 +49,17 @@ public class PropertyFileReader {
 			System.out.println("Reference Property file not found!!");
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	private static void getFileNamesInDirectory() {
+		File folder = new File("./");
+		File[] listOfFiles = folder.listFiles();
+
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) {
+				System.out.println("File " + listOfFiles[i].getName());
+			}
 		}
 	}
 
@@ -67,7 +80,7 @@ public class PropertyFileReader {
 			restServicesTest(refProp, prop);
 			ldapTest(prop);
 		} catch (FileNotFoundException e1) {
-			System.out.println("property file not found");
+			System.out.println("Property file not found. application.properties file must exist");
 		} catch (IOException e) {
 			System.out.println("io exception occured in loading property file");
 		} catch (Exception e) {
@@ -141,7 +154,9 @@ public class PropertyFileReader {
 							System.out.println("Rest url erorr occured");
 						} catch (UnsupportedEncodingException e) {
 							System.out.println("Rest auth encoding error occured");
-						} finally {
+						} catch(ConnectException e){
+							System.out.println("Connection error occured for " + restURL);
+						}finally {
 							System.out.println();
 						}
 					}
